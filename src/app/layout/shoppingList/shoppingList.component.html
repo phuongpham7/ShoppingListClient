@@ -1,0 +1,48 @@
+<div class="shoppinglist-content">
+    <h1 class="page-title">My Shopping List</h1>
+    <div class="shoppinglist-create">
+      <form #itemForm="ngForm" (ngSubmit)="createShoppingItem(itemForm)" novalidate>
+        <input type="text" id="item" class="form-control" placeholder="Type an item and press enter..." 
+            required name="item" [(ngModel)]="newItem.item" #item="ngModel">
+        <div *ngIf="item.errors && item.dirty" class="alert alert-danger">
+            <div [hidden]="!item.errors.required">
+                Item is required.
+            </div>
+        </div>
+      </form>
+    </div>
+    <ul class="shoppinglist-list">
+      <li *ngFor="let i of items" [class.completed]="i.completed === true" >
+        <div class="shoppinglist-row" *ngIf="!editing || editingItem.id != i.id">
+            <a class="shoppinglist-completed" (click)="toggleCompleted(i)">
+              <i class="material-icons toggle-completed-checkbox"></i> 
+            </a> 
+            <span class="shoppinglist-title">
+              {{i.item}}
+            </span>
+            <span class="shoppinglist-actions">
+                <a (click)="editShoppingItem(i)">
+                  <i class="material-icons edit">edit</i>
+                </a>
+                <a (click)="deleteShoppingItem(i.id)">
+                  <i class="material-icons delete">clear</i>
+                </a>
+            </span>
+        </div>
+        <div class="shoppinglist-edit" *ngIf="editing && editingItem.id === i.id">
+            <input class="form-control" type="text" [(ngModel)]="editingItem.item" required>
+            <span class="edit-actions">
+                <a (click)="updateShoppingItem(editingItem)">
+                  <i class="material-icons">done</i>
+                </a>
+                <a (click)="clearEditing()">
+                  <i class="material-icons">clear</i>
+                </a>
+            </span>
+        </div>
+      </li>
+    </ul>
+    <div class="no-shoppingitems" *ngIf="items && items.length == 0">
+        <p>No Items Found!</p>
+    </div>
+</div>
